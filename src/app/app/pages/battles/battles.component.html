@@ -1,3 +1,16 @@
-<div *ngFor="let speciment of species" >
-    {{ speciment.name }}: {{ speciment.birth_year}}
+<div class="row">
+    <div class="col" *ngIf="fighterOne">
+        {{fighterOne.name}}
+    </div>
+    <div class="col" *ngIf="fighterTwo">
+        {{fighterTwo.name}}
+    </div>
+    <mat-progress-spinner [mode]="'indeterminate'" *ngIf="!fighterOne && !fighterTwo"></mat-progress-spinner>
 </div>
+
+<div class="row">
+        <div class="col" >
+            <button (click)="fight()">FIGHT NEXT!</button>
+        </div>
+</div>
+    

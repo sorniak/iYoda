@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { speciesEndPoint } from '../shared/consts';
+import { starshipsEndPoint, peopleEndPoint } from '../shared/consts';
 
 @Injectable({
   providedIn: 'root'
@@ -13,12 +13,22 @@ export class SwapiService {
     private http: HttpClient
   ) { }
 
-  getSpecies(): Observable<any[]> {
-    return this.http.get<any[]>(speciesEndPoint)
+  getPeople(): Observable<any[]> {
+    return this.http.get<any[]>(peopleEndPoint)
     .pipe(
       map(data => {
         return data['results'];
       })
     );
   }
+
+  getStarships(): Observable<any[]> {
+    return this.http.get<any[]>(starshipsEndPoint)
+    .pipe(
+      map(data => {
+        return data['results'];
+      })
+    );
+  }
+
 }

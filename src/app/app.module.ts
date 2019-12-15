@@ -7,6 +7,8 @@ import { HistoryComponent } from './app/pages/history/history.component';
 import { BattlesComponent } from './app/pages/battles/battles.component';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { SwapiService } from './app/services/swapi.service';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatProgressSpinnerModule, MatCardModule } from '@angular/material';
 
 @NgModule({
   declarations: [
@@ -17,7 +19,10 @@ import { SwapiService } from './app/services/swapi.service';
   imports: [
     BrowserModule,
     HttpClientModule,
-    AppRoutingModule
+    AppRoutingModule,
+    BrowserAnimationsModule,
+    MatProgressSpinnerModule,
+    MatCardModule
   ],
   providers: [HttpClientModule, SwapiService, HttpClient],
   bootstrap: [AppComponent]
