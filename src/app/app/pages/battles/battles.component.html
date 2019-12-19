@@ -1,16 +1,40 @@
-<div class="row">
-    <div class="col" *ngIf="fighterOne">
-        {{fighterOne.name}}
+<div class="row justify-content-md-center my-5" *ngIf="fighterTwo && fighterOne">
+    <div class="col-4">
+        <mat-card>
+            <mat-card-title>{{fighterOne.name}}</mat-card-title>
+            <img mat-card-sm-image [src]="'assets/images/' + fighterOne.icon">
+            <mat-card-content>{{fightResult.comparedAttribute}}: {{fighterOne[fightResult.comparedAttribute]}}
+                <!-- FINISH FILTERING ACCORDING TO CONST_TO_LABELS -->
+                <mat-list>
+                    <mat-list-item *ngFor="let attribute of fighterOne | keyvalue">
+                        <mat-icon>navigate_next</mat-icon>{{attribute.key}}: {{attribute.value}}
+                    </mat-list-item>
+                </mat-list>
+            </mat-card-content>
+        </mat-card>       
     </div>
-    <div class="col" *ngIf="fighterTwo">
-        {{fighterTwo.name}}
+    <div class="col-1 my-auto text-center display-1 font-weight-bold font-italic text-danger">VS</div>
+    <div class="col-4">
+        <mat-card>
+            <mat-card-title>{{fighterTwo.name}}</mat-card-title>
+            <mat-card-content>{{fightResult.comparedAttribute}}: {{fighterTwo[fightResult.comparedAttribute]}}</mat-card-content>
+            <img mat-card-sm-image [src]="'assets/images/' + fighterTwo.icon">
+        </mat-card>  
     </div>
-    <mat-progress-spinner [mode]="'indeterminate'" *ngIf="!fighterOne && !fighterTwo"></mat-progress-spinner>
+    <mat-progress-spinner [mode]="'indeterminate'" *ngIf="loading"></mat-progress-spinner>
 </div>
 
-<div class="row">
-        <div class="col" >
-            <button (click)="fight()">FIGHT NEXT!</button>
+
+<div class="row justify-content-md-center my-5">
+        <div class="col-4" >
+            <div class="d-flex justify-content-center my-5" *ngIf="fightResult">
+                <mat-icon *ngIf="fightResult.result == fightResultsConst.winFightResult">mood</mat-icon>
+                {{fightResult.result}}
+                <mat-icon color="warn" *ngIf="fightResult.result == fightResultsConst.lostFightResult">mood_bad</mat-icon>
+            </div>
+            <div class="d-flex justify-content-center">
+                <button color="primary" (click)="fight()" [disabled]="loading">FIGHT!</button>
+            </div>
         </div>
 </div>
     

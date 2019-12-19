@@ -1,6 +1,19 @@
 import { Component, OnInit } from '@angular/core';
 import { SwapiService } from '../../services/swapi.service';
-import { People, Starships, Fighters } from '../../shared/consts';
+import {
+  People,
+  Starships,
+  Fighters,
+  fightResults,
+  peopleEndPoint,
+  starshipsEndPoint,
+  baseImages,
+  PeopleOrStarshipsWithIcon,
+  PeopleOrStarships,
+  fakeSwapiResponseStarships,
+  fakeSwapiResponsePeople
+} from '../../shared/consts';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-battles',
@@ -9,42 +22,99 @@ import { People, Starships, Fighters } from '../../shared/consts';
 })
 export class BattlesComponent implements OnInit {
 
-  people: Array<People>;
-  starships: Array<Starships>;
-  fighterOne: People | Starships;
-  fighterTwo: People | Starships;
-
-  color = 'primary';
-  mode = 'indeterminate';
-  value = 50;
+  loading = true;
+  people: Array<People> = [];
+  starships: Array<Starships> = [];
+  allObjects: Array<People | Starships> = [];
+  fighterOne: PeopleOrStarshipsWithIcon;
+  fighterTwo: PeopleOrStarshipsWithIcon;
+  fightResult: {
+    result: string,
+    comparedAttribute: string,
+    valueOfAttributeFighterOne: string,
+    valueOfAttributeFighterTwo: string
+  };
+  readonly fightResultsConst = fightResults;
 
   constructor(
     private swapi: SwapiService
-  ) { }
+  ) {}
 
   ngOnInit() {
-    this.swapi.getPeople().subscribe(data => this.people = data);
-    this.swapi.getStarships().subscribe(data => this.starships = data);
+    // this.loading = true;
+    // forkJoin(
+    //   this.swapi.getAllPagesFromEndPoint(peopleEndPoint),
+    //   this.swapi.getAllPagesFromEndPoint(starshipsEndPoint)
+    // ).subscribe({ //add timeout?
+    //   next: value => {
+    //     this.people = value[0];
+    //     this.starships = value[1];
+    //   },
+    //   complete: () => {
+    //     this.loading = false;
+    //     this.fightResult.result = fightResults.intialFightResultLabel;
+    //   },
+    //   error: () => this.fightResult.result = fightResults.errorWhileGettingData
+    // });
+
+
+
+    this.fightResult = {
+      result: fightResults.loadingFightingData,
+      comparedAttribute: undefined,
+      valueOfAttributeFighterOne: undefined,
+      valueOfAttributeFighterTwo: undefined
+    };
+
+    this.loading = false; //temp
+    this.people = fakeSwapiResponsePeople.results; //temp
+    this.starships = fakeSwapiResponseStarships.results; //temp
+    this.fightResult.result = fightResults.intialFightResultLabel; //temp
   }
 
   fight() {
-    const typeFighters = Fighters[Math.floor(Math.random() * (Fighters.length) ) ];
-    console.log(typeFighters);
+    const typeFighters = Fighters[Math.floor(Math.random() * (Fighters.length))];
     switch (typeFighters) {
       case 'People':
-        this.fighterOne = randArrayElement(this.people);
-        this.fighterTwo = randArrayElement(this.people);
+        this.getResultOfFight(this.people, 'person', 'mass');
         break;
       case 'Starships':
-        this.fighterOne = randArrayElement(this.starships);
-        this.fighterTwo = randArrayElement(this.starships);
+        this.getResultOfFight(this.starships, 'starship', 'crew');
         break;
     }
+  }
 
+  getResultOfFight(
+    fighters: PeopleOrStarships[],
+    typeOfFighters: string,
+    attributeToCompare: string
+  ) {
+    this.fighterOne = randArrayElementWithIcon(fighters, typeOfFighters);
+    this.fighterTwo = randArrayElementWithIcon(fighters, typeOfFighters);
+    if ((attributeToCompare in this.fighterOne) && (attributeToCompare in this.fighterTwo)) {
+      if (this.fighterOne[attributeToCompare] === 'unknown' || this.fighterTwo[attributeToCompare] === 'unknown') {
+        this.fightResult.result = fightResults.unknownFightResult;
+      } else if (parseFloat(this.fighterOne[attributeToCompare]) - parseFloat(this.fighterTwo[attributeToCompare]) > 0) {
+        this.fightResult.result = fightResults.winFightResult;
+      } else {
+        this.fightResult.result = fightResults.lostFightResult;
+      }
+      this.fightResult.comparedAttribute = attributeToCompare;
+      this.fightResult.valueOfAttributeFighterOne = this.fighterOne[attributeToCompare];
+      this.fightResult.valueOfAttributeFighterTwo = this.fighterTwo[attributeToCompare];
+    }
   }
 
 }
 
-function randArrayElement(A: Array<Starships | People>): Starships | People {
-  return A[Math.floor(Math.random() * A.length)];
+function randArrayElementWithIcon(
+  inputArray: Array<PeopleOrStarships>,
+  typeOfFighters: string
+): PeopleOrStarshipsWithIcon {
+  const defaultFightersType = typeOfFighters === 'starship' ? 'defaultShip' : 'defaultPerson';
+  const randNumber = Math.floor(Math.random() * inputArray.length);
+  const nameOfAttribute = 'name';
+  return baseImages[inputArray[randNumber][nameOfAttribute]] ?
+    { icon: baseImages[inputArray[randNumber][nameOfAttribute]], ...inputArray[randNumber] } :
+    { icon: baseImages[defaultFightersType], ...inputArray[randNumber] };
 }

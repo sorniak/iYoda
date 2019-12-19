@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { starshipsEndPoint, peopleEndPoint } from '../shared/consts';
+import { EMPTY } from 'rxjs';
+import { reduce, expand, timeout } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -13,21 +12,16 @@ export class SwapiService {
     private http: HttpClient
   ) { }
 
-  getPeople(): Observable<any[]> {
-    return this.http.get<any[]>(peopleEndPoint)
-    .pipe(
-      map(data => {
-        return data['results'];
-      })
-    );
-  }
-
-  getStarships(): Observable<any[]> {
-    return this.http.get<any[]>(starshipsEndPoint)
-    .pipe(
-      map(data => {
-        return data['results'];
-      })
+  getAllPagesFromEndPoint(endpoint: string) { //add timeout?
+    return this.http.get(endpoint).pipe(
+      expand(
+        (res) => {
+        const keyNext = 'next';
+        return res[keyNext] ? this.http.get(res[keyNext]) : EMPTY; }),
+        reduce((acc, res) => {
+          const keyResult = 'results';
+          return acc.concat(res[keyResult]); }, []
+        )
     );
   }
 
