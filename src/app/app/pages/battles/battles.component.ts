@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { forkJoin } from 'rxjs';
+
 import { SwapiService } from '../../services/swapi.service';
 import {
   People,
@@ -11,9 +13,10 @@ import {
   PeopleOrStarshipsWithIcon,
   PeopleOrStarships,
   fakeSwapiResponseStarships,
-  fakeSwapiResponsePeople
+  fakeSwapiResponsePeople,
+  constToLabels
 } from '../../shared/consts';
-import { forkJoin } from 'rxjs';
+
 
 @Component({
   selector: 'app-battles',
@@ -35,6 +38,7 @@ export class BattlesComponent implements OnInit {
     valueOfAttributeFighterTwo: string
   };
   readonly fightResultsConst = fightResults;
+  readonly constToLabels = constToLabels;
 
   constructor(
     private swapi: SwapiService
@@ -89,8 +93,8 @@ export class BattlesComponent implements OnInit {
     typeOfFighters: string,
     attributeToCompare: string
   ) {
-    this.fighterOne = randArrayElementWithIcon(fighters, typeOfFighters);
-    this.fighterTwo = randArrayElementWithIcon(fighters, typeOfFighters);
+    this.fighterOne = this.randArrayElementWithIcon(fighters, typeOfFighters);
+    this.fighterTwo = this.randArrayElementWithIcon(fighters, typeOfFighters);
     if ((attributeToCompare in this.fighterOne) && (attributeToCompare in this.fighterTwo)) {
       if (this.fighterOne[attributeToCompare] === 'unknown' || this.fighterTwo[attributeToCompare] === 'unknown') {
         this.fightResult.result = fightResults.unknownFightResult;
@@ -105,16 +109,27 @@ export class BattlesComponent implements OnInit {
     }
   }
 
-}
+  randArrayElementWithIcon(
+    inputArray: Array<PeopleOrStarships>,
+    typeOfFighters: string
+  ): PeopleOrStarshipsWithIcon {
+    const defaultFightersType = typeOfFighters === 'starship' ? 'defaultShip' : 'defaultPerson';
+    const randNumber = Math.floor(Math.random() * inputArray.length);
+    const nameOfAttribute = 'name';
+    return baseImages[inputArray[randNumber][nameOfAttribute]] ?
+      { icon: baseImages[inputArray[randNumber][nameOfAttribute]], ...inputArray[randNumber] } :
+      { icon: baseImages[defaultFightersType], ...inputArray[randNumber] };
+  }
 
-function randArrayElementWithIcon(
-  inputArray: Array<PeopleOrStarships>,
-  typeOfFighters: string
-): PeopleOrStarshipsWithIcon {
-  const defaultFightersType = typeOfFighters === 'starship' ? 'defaultShip' : 'defaultPerson';
-  const randNumber = Math.floor(Math.random() * inputArray.length);
-  const nameOfAttribute = 'name';
-  return baseImages[inputArray[randNumber][nameOfAttribute]] ?
-    { icon: baseImages[inputArray[randNumber][nameOfAttribute]], ...inputArray[randNumber] } :
-    { icon: baseImages[defaultFightersType], ...inputArray[randNumber] };
+  keysToLabelFilter(inputObj: PeopleOrStarshipsWithIcon) {
+    const result = {};
+    let key: string;
+    for (key in inputObj) {
+      if (inputObj.hasOwnProperty(key) && constToLabels.hasOwnProperty(key)) {
+          result[key] = inputObj[key];
+      }
+    }
+    return result;
+  }
+
 }

@@ -65,7 +65,7 @@ export const constToLabels = {
     gender: 'gender',
     hair_color: 'hair color',
     height: 'height',
-    skin_color: 'skin_color'
+    skin_color: 'skin color'
 };
 
 export const fightResults = {
