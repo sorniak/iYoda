@@ -7,7 +7,7 @@ import { starshipsEndPoint, fakeSwapiResponseStarships } from '../shared/consts'
 describe('SwapiService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule ]
+      imports: [HttpClientTestingModule]
     });
   });
 
@@ -19,9 +19,9 @@ describe('SwapiService', () => {
   it('SwapiService with single page (i.e. next with no values)', (done) => {
     const service: SwapiService = TestBed.get(SwapiService);
     const backend: HttpTestingController = TestBed.get(HttpTestingController);
-    const onePageApiResponse = {...fakeSwapiResponseStarships, next: null};
+    const onePageApiResponse = { ...fakeSwapiResponseStarships, next: null };
 
-    service.getAllPagesFromEndPoint(starshipsEndPoint).subscribe( data => {
+    service.getAllPagesFromEndPoint(starshipsEndPoint).subscribe(data => {
       expect(data[0]['name']).toEqual('Executor');
       expect(data[0].length).toEqual(fakeSwapiResponseStarships.results[0].length);
       done();
@@ -37,11 +37,11 @@ describe('SwapiService', () => {
   it('SwapiService with three pages', (done) => {
     const service: SwapiService = TestBed.get(SwapiService);
     const backend: HttpTestingController = TestBed.get(HttpTestingController);
-    const firstPageApiResponse = {...fakeSwapiResponseStarships, next: starshipsEndPoint + '?page=2'};
-    const secondPageApiResponse = {...fakeSwapiResponseStarships, next: starshipsEndPoint + '?page=3'};
-    const thirdPageApiResponse = {...fakeSwapiResponseStarships, next: null};
+    const firstPageApiResponse = { ...fakeSwapiResponseStarships, next: starshipsEndPoint + '?page=2' };
+    const secondPageApiResponse = { ...fakeSwapiResponseStarships, next: starshipsEndPoint + '?page=3' };
+    const thirdPageApiResponse = { ...fakeSwapiResponseStarships, next: null };
 
-    service.getAllPagesFromEndPoint(starshipsEndPoint).subscribe( data => {
+    service.getAllPagesFromEndPoint(starshipsEndPoint).subscribe(data => {
       expect(data[0]['name']).toEqual('Executor');
       expect(data[10]['starship_class']).toEqual('Deep Space Mobile Battlestation');
       expect(data.length).toEqual(3 * fakeSwapiResponseStarships.results.length);

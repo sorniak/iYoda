@@ -16,12 +16,14 @@ export class SwapiService {
     return this.http.get(endpoint).pipe(
       expand(
         (res) => {
-        const keyNext = 'next';
-        return res[keyNext] ? this.http.get(res[keyNext]) : EMPTY; }),
-        reduce((acc, res) => {
-          const keyResult = 'results';
-          return acc.concat(res[keyResult]); }, []
-        )
+          const keyNext = 'next';
+          return res[keyNext] ? this.http.get(res[keyNext]) : EMPTY;
+        }),
+      reduce((acc, res) => {
+        const keyResult = 'results';
+        return acc.concat(res[keyResult]);
+      }, []
+      )
     );
   }
 

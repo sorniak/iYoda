@@ -12,8 +12,6 @@ import {
   baseImages,
   PeopleOrStarshipsWithIcon,
   PeopleOrStarships,
-  fakeSwapiResponseStarships,
-  fakeSwapiResponsePeople,
   constToLabels
 } from '../../shared/consts';
 
@@ -42,7 +40,7 @@ export class BattlesComponent implements OnInit {
 
   constructor(
     private swapi: SwapiService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.loading = true;
@@ -69,11 +67,6 @@ export class BattlesComponent implements OnInit {
       valueOfAttributeFighterOne: undefined,
       valueOfAttributeFighterTwo: undefined
     };
-
-    // this.loading = false; //temp
-    // this.people = fakeSwapiResponsePeople.results; //temp
-    // this.starships = fakeSwapiResponseStarships.results; //temp
-    // this.fightResult.result = fightResults.intialFightResultLabel; //temp
   }
 
   fight() {
@@ -129,7 +122,7 @@ export class BattlesComponent implements OnInit {
     let key: string;
     for (key in inputObj) {
       if (inputObj.hasOwnProperty(key) && constToLabels.hasOwnProperty(key)) {
-          result[key] = inputObj[key];
+        result[key] = inputObj[key];
       }
     }
     return result;

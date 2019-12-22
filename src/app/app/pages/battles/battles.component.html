@@ -7,11 +7,11 @@
                 <mat-list class="text-break">
                     <mat-list-item *ngFor="let attribute of keysToLabelFilter(fighterOne) | keyvalue">
                         <mat-icon>navigate_next</mat-icon>
-                            {{constToLabels[attribute.key]}}: {{attribute.value}}
+                        {{constToLabels[attribute.key]}}: {{attribute.value}}
                     </mat-list-item>
                 </mat-list>
             </mat-card-content>
-        </mat-card>       
+        </mat-card>
     </div>
     <div class="col-md-3 mt-md-5 text-center text-break">
         <div class="d-flex justify-content-center">
@@ -21,13 +21,14 @@
         <div class="d-flex justify-content-center my-5" *ngIf="fightResult">
             <mat-icon *ngIf="fightResult.result == fightResultsConst.drawFightResult">mood</mat-icon>
             {{fightResult.result}}
-            <mat-icon color="warn" *ngIf="fightResult.result == fightResultsConst.unknownFightResult">mood_bad</mat-icon>
+            <mat-icon color="warn" *ngIf="fightResult.result == fightResultsConst.unknownFightResult">mood_bad
+            </mat-icon>
         </div>
         <div class="d-flex justify-content-center">
             <button color="primary" (click)="fight()" [disabled]="loading">FIGHT!</button>
         </div>
     </div>
-    <div class="col-md-4"  *ngIf="fighterTwo">
+    <div class="col-md-4" *ngIf="fighterTwo">
         <mat-card class="h-100">
             <mat-card-title>{{fighterTwo.name}}</mat-card-title>
             <img mat-card-sm-image [src]="'assets/images/' + fighterTwo.icon">
@@ -35,10 +36,10 @@
                 <mat-list class="text-break">
                     <mat-list-item *ngFor="let attribute of keysToLabelFilter(fighterTwo) | keyvalue">
                         <mat-icon>navigate_next</mat-icon>
-                            {{constToLabels[attribute.key]}}: {{attribute.value}}
+                        {{constToLabels[attribute.key]}}: {{attribute.value}}
                     </mat-list-item>
                 </mat-list>
             </mat-card-content>
-        </mat-card>  
+        </mat-card>
     </div>
 </div>
