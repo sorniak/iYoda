@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { EMPTY } from 'rxjs';
-import { reduce, expand, timeout } from 'rxjs/operators';
+import { reduce, expand } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +12,7 @@ export class SwapiService {
     private http: HttpClient
   ) { }
 
-  getAllPagesFromEndPoint(endpoint: string) { //add timeout?
+  getAllPagesFromEndPoint(endpoint: string) {
     return this.http.get(endpoint).pipe(
       expand(
         (res) => {

@@ -45,21 +45,21 @@ export class BattlesComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    // this.loading = true;
-    // forkJoin(
-    //   this.swapi.getAllPagesFromEndPoint(peopleEndPoint),
-    //   this.swapi.getAllPagesFromEndPoint(starshipsEndPoint)
-    // ).subscribe({ //add timeout?
-    //   next: value => {
-    //     this.people = value[0];
-    //     this.starships = value[1];
-    //   },
-    //   complete: () => {
-    //     this.loading = false;
-    //     this.fightResult.result = fightResults.intialFightResultLabel;
-    //   },
-    //   error: () => this.fightResult.result = fightResults.errorWhileGettingData
-    // });
+    this.loading = true;
+    forkJoin(
+      this.swapi.getAllPagesFromEndPoint(peopleEndPoint),
+      this.swapi.getAllPagesFromEndPoint(starshipsEndPoint)
+    ).subscribe({
+      next: value => {
+        this.people = value[0];
+        this.starships = value[1];
+      },
+      complete: () => {
+        this.loading = false;
+        this.fightResult.result = fightResults.intialFightResultLabel;
+      },
+      error: () => this.fightResult.result = fightResults.errorWhileGettingData
+    });
 
 
 
@@ -70,10 +70,10 @@ export class BattlesComponent implements OnInit {
       valueOfAttributeFighterTwo: undefined
     };
 
-    this.loading = false; //temp
-    this.people = fakeSwapiResponsePeople.results; //temp
-    this.starships = fakeSwapiResponseStarships.results; //temp
-    this.fightResult.result = fightResults.intialFightResultLabel; //temp
+    // this.loading = false; //temp
+    // this.people = fakeSwapiResponsePeople.results; //temp
+    // this.starships = fakeSwapiResponseStarships.results; //temp
+    // this.fightResult.result = fightResults.intialFightResultLabel; //temp
   }
 
   fight() {
@@ -96,12 +96,15 @@ export class BattlesComponent implements OnInit {
     this.fighterOne = this.randArrayElementWithIcon(fighters, typeOfFighters);
     this.fighterTwo = this.randArrayElementWithIcon(fighters, typeOfFighters);
     if ((attributeToCompare in this.fighterOne) && (attributeToCompare in this.fighterTwo)) {
+      const sumOfFight = parseFloat(this.fighterOne[attributeToCompare]) - parseFloat(this.fighterTwo[attributeToCompare]);
       if (this.fighterOne[attributeToCompare] === 'unknown' || this.fighterTwo[attributeToCompare] === 'unknown') {
         this.fightResult.result = fightResults.unknownFightResult;
-      } else if (parseFloat(this.fighterOne[attributeToCompare]) - parseFloat(this.fighterTwo[attributeToCompare]) > 0) {
-        this.fightResult.result = fightResults.winFightResult;
+      } else if (sumOfFight > 0) {
+        this.fightResult.result = this.fighterOne.name + fightResults.winFightResult;
+      } else if (sumOfFight === 0) {
+        this.fightResult.result = fightResults.drawFightResult;
       } else {
-        this.fightResult.result = fightResults.lostFightResult;
+        this.fightResult.result = this.fighterTwo.name + fightResults.winFightResult;
       }
       this.fightResult.comparedAttribute = attributeToCompare;
       this.fightResult.valueOfAttributeFighterOne = this.fighterOne[attributeToCompare];

@@ -70,11 +70,11 @@ export const constToLabels = {
 
 export const fightResults = {
     intialFightResultLabel: 'Press FIGHT to start!',
-    winFightResult: 'You won!',
-    lostFightResult: 'You looose!',
+    winFightResult: ' won!',
+    drawFightResult: 'Nobody won...',
     unknownFightResult: 'Insufficient data to resolve the fight ...',
     errorWhileGettingData: 'Could not get data, try to reload page ...',
-    loadingFightingData: 'Acquiring data, please wait ...'
+    loadingFightingData: 'Acquiring data, please wait ...',
 };
 
 export const baseImages = {
